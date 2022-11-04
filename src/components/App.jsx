@@ -1,42 +1,42 @@
-import React from "react";
-import Header from "./Header";
-import Footer from "./Footer";
+import React, { useState } from "react";
+import ToDoItem from "./ToDoItem";
 
 function App() {
-  const username = "Mr. Koirala";
+  const [inputData, setInputData] = useState("");
+  const [items, setItem] = useState([]);
 
-  const date = new Date();
-  const currentTime = date.getHours();
-
-  let greetings;
-  var customStyle = {
-    color: "",
-  };
-
-  if (currentTime < 12) {
-    greetings = "Good Morning!";
-    customStyle.color = "orange";
-  } else if (currentTime < 18) {
-    greetings = "Good Afternoon!";
-    customStyle.color = "red";
-  } else {
-    greetings = "Good Night!";
-    customStyle.color = "green";
+  function inputComing(event) {
+    setInputData(event.target.value);
   }
-
+  function addToList() {
+    setItem((previtems) => [inputData, ...previtems]);
+    setInputData("");
+  }
+  function deleteItem(id) {
+    setItem((previtems) => previtems.filter((item, index) => index !== id));
+  }
   return (
-    <div>
-      <div>
-        <Header />
+    <div className="container">
+      <div className="heading">
+        <h1>To-Do List</h1>
+      </div>
+      <div className="form">
+        <input value={inputData} type="text" onChange={inputComing} />
+        <button onClick={addToList}>
+          <span>Add</span>
+        </button>
       </div>
       <div>
-        <h1 style={{ color: "black", border: "1px solid black" }}>
-          Hello, {username}
-        </h1>
-        <h3 style={customStyle}>{greetings}</h3>
-      </div>
-      <div>
-        <Footer />
+        <ul>
+          {items.map((toDoItem, index) => (
+            <ToDoItem
+              key={index}
+              id={index}
+              text={toDoItem}
+              onChecked={deleteItem}
+            />
+          ))}
+        </ul>
       </div>
     </div>
   );
